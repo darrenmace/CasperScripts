@@ -1,7 +1,7 @@
 #!/bin/sh
 ################################################################################
 # Author: Darren Mace
-# Modified: 2015-04-16
+# Modified: 2015-08-26
 #
 # This script utilizes CocoaDialog.app to convert local Mac OS X user accounts
 # to mobile accounts.
@@ -15,7 +15,7 @@
 # Changelog
 #
 # Version 1.0 - Darren Mace
-#   Initial script
+# Version 1.1 - added support for HomeBrew migrations
 #
 ################################################################################
 # Variables
@@ -233,6 +233,17 @@ else
   cp -R /System/Library/User\ Template/English.lproj /Users/"${adUser}"
   chown -R "${adUser}":staff /Users/"${adUser}"
   /System/Library/CoreServices/ManagedClient.app/Contents/Resources/createmobileaccount -n "${adUser}" -h /Users/"${adUser}"
+
+  # If HomeBrew exists, chown it to "${adUser}"
+  if [[ -f /usr/local/bin/brew ]]; then
+    ls -al /usr/local | awk '{print $9}' > /tmp/brew.txt
+    for file in $(cat /tmp/brew.txt)
+    do
+        if  [ "$file" != "." ] && [ "$file" != ".." ]; then
+                /usr/sbin/chown -R "${adUser}" /usr/local/"$file"
+        fi
+    done
+  fi
 
   #/System/Library/CoreServices/ManagedClient.app/Contents/Resources/createmobileaccount -n "${adUser}"
   echo "Mobile account for ${adUser} has been created on this computer"
