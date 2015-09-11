@@ -16,6 +16,7 @@
 #
 # Version 1.0 - Darren Mace
 # Version 1.1 - added support for HomeBrew migrations
+# Version 1.2 - added support for multiple ADs
 #
 ################################################################################
 # Variables
@@ -27,12 +28,6 @@ CD="/Applications/CocoaDialog.app/Contents/MacOS/CocoaDialog"
 
 # Set localadmin username
 localAdmin=welladmin
-
-# set this to the new AD domain name
-newAD=$4  
-
-# Set JAMF "Bind to AD" Policy id number.
-jamfADPolicyId=3
 
 # Set local username
 localUser=$5
@@ -140,10 +135,40 @@ if [[ "${check4AD}" == "Active Directory" ]]; then
   die "This machine is bound to Active Directory. Please delete machine from AD first."
 fi
 
-# bind to new AD
-# using a JAMF policy to bind to the new AD
+# bind to new AD using a JAMF policy to bind to the new AD
+# First have to determine which AD to bind to
 
-jamf policy -id ${jamfADPolicyId} # can also use a custom trigger for the policy
+rv=$("${CD}" standard-dropdown --title "Which Domain?" \
+    --text "Please select the domain to bind this mac to!" \
+    --float \
+    --height 150 \
+    --items "Denver" "Lyndhurst" "Seattle" "Burlington" \
+    )
+
+return=`echo $rv | cut -d" " -f1`
+answer=`echo $rv | cut -d" " -f2`
+
+if [ $return -eq 1 ]; then
+     case $answer in
+         0)  jamfADPolicyId=3
+             newAD="denver.welltok.com"
+             ;;
+         1)  jamfADPolicyId=45
+             newAD="lyndhurst.welltok.com"
+             ;;
+         2)  jamfADPolicyId=67
+             newAD="seattle.welltok.com"
+             ;;
+         3)  jamfADPolicyId=99
+             newAD="burlington.welltok.com"
+             ;;
+     esac
+else
+    die "A Domain was not selected"
+fi
+
+# Run the policy to bind the mac to the right AD Domain
+jamf policy -id ${jamfADPolicyId} 
 
 ### verify that the AD binding was successful
 checkAD=`dsconfigad -show | grep -i "active directory domain" | awk '{ print $5 }'`
