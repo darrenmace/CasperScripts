@@ -17,6 +17,8 @@
 # Version 1.0 - Darren Mace
 # Version 1.1 - added support for HomeBrew migrations
 # Version 1.2 - added support for multiple ADs
+# Version 1.3 - added Lyndhurst AD policy ID
+# Version 1.4 - added Seattle AD policy ID
 #
 ################################################################################
 # Variables
@@ -30,16 +32,16 @@ CD="/Applications/CocoaDialog.app/Contents/MacOS/CocoaDialog"
 localAdmin=welladmin
 
 # Set local username
-localUser=$5
+localUser=$4
 
 # Set AD username
-adUser=$6
+adUser=$5
 
 # Set AD password
-adPassword=$7
+adPassword=$6
 
 # Set localadmin password
-adminPassword=$8
+adminPassword=$7
 
 ################################################################################
 # Other Variables (Should not need to modify)
@@ -153,10 +155,10 @@ if [ $return -eq 1 ]; then
          0)  jamfADPolicyId=3
              newAD="denver.welltok.com"
              ;;
-         1)  jamfADPolicyId=45
+         1)  jamfADPolicyId=866
              newAD="lyndhurst.welltok.com"
              ;;
-         2)  jamfADPolicyId=67
+         2)  jamfADPolicyId=937
              newAD="seattle.welltok.com"
              ;;
          3)  jamfADPolicyId=99
