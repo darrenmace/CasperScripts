@@ -19,6 +19,7 @@
 # Version 1.2 - added support for multiple ADs
 # Version 1.3 - added Lyndhurst AD policy ID
 # Version 1.4 - added Seattle AD policy ID
+# Version 1.5 - added another HomeBrew directory
 #
 ################################################################################
 # Variables
@@ -270,6 +271,7 @@ else
                 /usr/sbin/chown -R "${adUser}" /usr/local/"$file"
         fi
     done
+    /usr/sbin/chown -R "${adUser}" /Library/Caches/HomeBrew
   fi
 
   #/System/Library/CoreServices/ManagedClient.app/Contents/Resources/createmobileaccount -n "${adUser}"
