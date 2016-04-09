@@ -162,7 +162,7 @@ if [ $return -eq 1 ]; then
          2)  jamfADPolicyId=937
              newAD="seattle.welltok.com"
              ;;
-         3)  jamfADPolicyId=99
+         3)  jamfADPolicyId=1246
              newAD="burlington.welltok.com"
              ;;
      esac
